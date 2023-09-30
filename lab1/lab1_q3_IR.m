@@ -254,9 +254,9 @@ plot(x_steel_up,y_steel_up,'LineWidth', 1.35);
 hold on;
 plot(x_shiny_up,y_shiny_up,'LineWidth', 1.35);
 hold on;
-plot(x_shiny_sand_up,y_shiny_sand_up,'LineWidth', 1.35);
-hold on;
 plot(x_sand_up,y_sand_up,'LineWidth', 1.35);
+hold on;
+plot(x_shiny_sand_up,y_shiny_sand_up,'LineWidth', 1.35);
 hold on;
 plot(x_acrylic_up,y_acrylic_up,'LineWidth', 1.35);
 % calibration equations
@@ -363,23 +363,23 @@ end
 %calibration equations
 p_steel = polyfit(x_steel_up, y_steel_up, 2)
 y_steel_up_calib = p_steel(1)*x_steel_up.^2 + p_steel(2)*x_steel_up + p_steel(3);
-eq_steel = sprintf("Steel calibration: %fx^2 + %f + %f", p_steel(1), p_steel(2), p_steel(3))
+eq_steel = sprintf("Steel calibration: %fx^2 + %fx + %f", p_steel(1), p_steel(2), p_steel(3))
 
 p_shiny = polyfit(x_shiny_up, y_shiny_up, 2)
 y_shiny_up_calib = p_shiny(1)*x_shiny_up.^2 + p_shiny(2)*x_shiny_up + p_shiny(3);
-eq_shiny = sprintf("Shiny Al calibration: %fx^2 + %f + %f", p_shiny(1), p_shiny(2), p_shiny(3))
+eq_shiny = sprintf("Shiny Al calibration: %fx^2 + %fx + %f", p_shiny(1), p_shiny(2), p_shiny(3))
 
 p_sand = polyfit(x_sand_up, y_sand_up, 2)
 y_sand_up_calib = p_sand(1)*x_sand_up.^2 + p_sand(2)*x_sand_up + p_sand(3);
-eq_sand = sprintf("Sandblasted Al calibration: %fx^2 + %f + %f", p_sand(1), p_sand(2), p_sand(3))
+eq_sand = sprintf("Sandblasted Al calibration: %fx^2 + %fx + %f", p_sand(1), p_sand(2), p_sand(3))
 
 p_shiny_sand = polyfit(x_shiny_sand_up, y_shiny_sand_up, 2)
 y_shiny_sand_up_calib = p_shiny_sand(1)*x_shiny_sand_up.^2 + p_shiny_sand(2)*x_shiny_sand_up + p_shiny_sand(3);
-eq_shiny_sand = sprintf("Shiny Sandblasted Al calibration: %fx^2 + %f + %f", p_shiny_sand(1), p_shiny_sand(2), p_shiny_sand(3))
+eq_shiny_sand = sprintf("Shiny Sandblasted Al calibration: %fx^2 + %fx + %f", p_shiny_sand(1), p_shiny_sand(2), p_shiny_sand(3))
 
 p_acrylic = polyfit(x_acrylic_up, y_acrylic_up, 2)
 y_acrylic_up_calib = p_acrylic(1)*x_acrylic_up.^2 + p_acrylic(2)*x_acrylic_up + p_acrylic(3);
-eq_acrylic = sprintf("Acrylic calibration: %fx^2 + %f + %f", p_acrylic(1), p_acrylic(2), p_acrylic(3))
+eq_acrylic = sprintf("Acrylic calibration: %fx^2 + %fx + %f", p_acrylic(1), p_acrylic(2), p_acrylic(3))
 
 %plot
 plot_colors = ["#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30", "#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30"];
@@ -389,9 +389,9 @@ plot(x_steel_up,y_steel_up,'LineWidth', 1.35);
 hold on;
 plot(x_shiny_up,y_shiny_up,'LineWidth', 1.35);
 hold on;
-plot(x_shiny_sand_up,y_shiny_sand_up,'LineWidth', 1.35);
-hold on;
 plot(x_sand_up,y_sand_up,'LineWidth', 1.35);
+hold on;
+plot(x_shiny_sand_up,y_shiny_sand_up,'LineWidth', 1.35);
 hold on;
 plot(x_acrylic_up,y_acrylic_up,'LineWidth', 1.35);
 % calibration equations
