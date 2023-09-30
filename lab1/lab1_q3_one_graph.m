@@ -224,8 +224,31 @@ for i = 1 : int32(length(x_acrylic)/2)
     end
 end
 
+%calibration equations
+p_steel = polyfit(x_steel_up, y_steel_up, 1)
+y_steel_up_calib = x_steel_up*p_steel(1) + p_steel(2);
+eq_steel = sprintf("Steel calibration: %fx  %f", p_steel(1), p_steel(2))
+
+p_shiny = polyfit(x_shiny_up, y_shiny_up, 1)
+y_shiny_up_calib = x_shiny_up*p_shiny(1) + p_shiny(2);
+eq_shiny = sprintf("Shiny Al calibration: %fx  %f", p_shiny(1), p_shiny(2))
+
+p_sand = polyfit(x_sand_up, y_sand_up, 1)
+y_sand_up_calib = x_sand_up*p_sand(1) + p_sand(2);
+eq_sand = sprintf("Sandblasted Al calibration: %fx  %f", p_sand(1), p_sand(2))
+
+p_shiny_sand = polyfit(x_shiny_sand_up, y_shiny_sand_up, 1)
+y_shiny_sand_up_calib = x_shiny_sand_up*p_shiny_sand(1) + p_shiny_sand(2);
+eq_shiny_sand = sprintf("Shiny Sandblasted Al calibration: %fx  %f", p_shiny_sand(1), p_shiny_sand(2))
+
+p_acrylic = polyfit(x_acrylic_up, y_acrylic_up, 1)
+y_acrylic_up_calib = x_acrylic_up*p_acrylic(1) + p_acrylic(2);
+eq_acrylic = sprintf("Acrylic calibration: %fx + %f", p_acrylic(1), p_acrylic(2))
+
+
 %plot
-colororder = ["#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30"];
+plot_colors = ["#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30", "#0072BD", "#D95319", "#EDB120", "#7E2F8E", "#77AC30"];
+colororder(plot_colors);
 
 plot(x_steel_up,y_steel_up,'LineWidth', 1.35);
 hold on;
@@ -236,11 +259,22 @@ hold on;
 plot(x_sand_up,y_sand_up,'LineWidth', 1.35);
 hold on;
 plot(x_acrylic_up,y_acrylic_up,'LineWidth', 1.35);
+% calibration equations
+hold on;
+plot(x_steel_up,y_steel_up_calib,"--", 'LineWidth', 1.35);
+hold on;
+plot(x_shiny_up,y_shiny_up_calib,"--", 'LineWidth', 1.35);
+hold on;
+plot(x_sand_up,y_sand_up_calib,"--", 'LineWidth', 1.35);
+hold on;
+plot(x_shiny_sand_up,y_shiny_sand_up_calib,"--", 'LineWidth', 1.35);
+hold on;
+plot(x_acrylic_up,y_acrylic_up_calib,"--", 'LineWidth', 1.35);
 
 title("LED Sensor Calibration")
 xlabel("Relative Distance (mm)")
 ylabel("Sensor Voltage (V)")
 xlim([x_min x_max])
 ylim([0 10])
-legend({'Steel','Shiny Al','Sand Blasted Al','Shiny/Sand Blasted Al','Acrylic'},'Location','eastoutside','Orientation','vertical')
+legend({'Steel','Shiny Al','Sand Blasted Al','Shiny/Sand Blasted Al','Acrylic',eq_steel,eq_shiny,eq_sand,eq_shiny_sand,eq_acrylic},'Location','eastoutside','Orientation','vertical')
 saveas(gcf,'3_led.png')
