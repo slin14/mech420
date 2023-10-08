@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
+# customization
+plt.rcParams["font.family"] = "serif"
+
 def printLatexTableRow(arr, file=None, precision=2):
     if file == None:
         file = sys.stdout
@@ -19,14 +22,14 @@ def printLatexTableRow(arr, file=None, precision=2):
 
 
 positions = np.arange(11) * 5 # mm
-print(positions)
+print(f"INFO: {positions}")
 voltages = np.empty_like(positions, dtype=float)
 voltages_std = np.empty_like(positions, dtype=float)
 
 for i, pos in enumerate(positions):
-    filename = f"data/ptA/A_{pos}.csv"
+    filename = f"data/A_{pos}.csv"
     csv_data = np.loadtxt(filename, delimiter=',', skiprows=1)
-    values = csv_data[:, 1]
+    values = csv_data[:, 2]
     voltages[i] = np.average(values)
     voltages_std[i] = np.std(values)
 
@@ -59,7 +62,7 @@ print(f"Zero offset [V]: {zero_offset}")
 axes.legend()
 
 fig.set_size_inches([5, 3])
-fig.savefig('img/calibration.png', bbox_inches='tight')
+fig.savefig('img/A3_pot_calibration.png', bbox_inches='tight')
 plt.close(fig)
 
 calibration_error = linear_voltages - voltages
@@ -71,7 +74,7 @@ axes.grid()
 axes.set_xlabel("Position, mm")
 axes.set_ylabel("Voltage nonlinearity error, V")
 fig.set_size_inches([5, 3])
-fig.savefig('img/nonlinearity.png', bbox_inches='tight')
+fig.savefig('img/A4_pot_nonlinearity.png', bbox_inches='tight')
 # plt.show()
 
 max_nonlin_error = max(np.abs(calibration_error))
