@@ -50,11 +50,6 @@ for sensor in sensors:
     axes.set_xlabel("Position, mm")
     axes.set_ylabel("Voltage, V")
     
-    # customization
-    plt.rcParams["font.family"] = "serif"
-    axes.set_prop_cycle(color=['red', 'blue', 'green', 'orange'])
-    
-    
     print("\n\n")
     
     # Endpoint calibration curve
