@@ -64,3 +64,42 @@ legend('0.3A', '0.5A', '0.7A')
 title('VCA Force vs position for different coil currents')
 exportgraphics(gca, 'img/b1_F_vs_position.png')
 hold off;
+%% q2 - Bl vs position for different coil currents, find experimental Bl
+figure(2)
+trim = 0.53; % keep data from length(data)*trim to length(data) % because 1st half has an ugly spike
+
+% for each coil current
+for i = 1 : length(coil_currents)
+    fileMatrix = readmatrix(sprintf("data\\B2_%.1fA.csv", coil_currents(i)));
+    N = length(fileMatrix(:,1));
+    
+    % position
+    lvdt_voltage = fileMatrix(:, 3);
+    position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
+    %position = position - position(int32(N*trim)); zero the 1st half
+    position = position(int32(N*trim)) - position;
+
+    % current
+    vca_current = fileMatrix(:, 5);
+    vca_current = vca_current - lab_current(i); % compensate for LabView offset
+    
+    % force
+    load_cell = fileMatrix(:, 2); % kg
+    force = load_cell * g;
+    %force = vca_bl * vca_current;
+    %plot(position(1:int32(N*trim)), force(1:int32(N*trim))); % plot 1st
+    %half to avoid hysteresis
+    plot(vca_current(int32(N*trim):N), force(int32(N*trim):N))
+    hold on;
+
+    % experimental force constant Bl
+    %bl = polyfit(vca_current, force, 1); % linear best fit
+    %disp([sprintf("current %.1f A",coil_currents(i)) 'is y = ' num2str(bl(1)) '*x + ' num2str(bl(2))])
+end
+
+ylabel('VCA Force (N)')
+xlabel('VCA Current (A)')
+legend('0.3A', '0.5A', '0.7A')
+title('VCA Force vs position for different coil currents')
+exportgraphics(gca, 'img/b2_F_vs_I.png')
+hold off;
