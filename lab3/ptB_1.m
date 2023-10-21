@@ -33,7 +33,7 @@ for i = 1 : length(coil_currents)
     % force
     vca_current = fileMatrix(:, 3);
     vca_current = vca_current - lab_current(i); % compensate for LabView offset
-    force = vca_bl * vca_current; % wrong, must be a function of position
+    force = vca_bl * vca_current;
     plot(position, force);
     hold on;
 end
