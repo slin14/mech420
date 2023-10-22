@@ -121,7 +121,28 @@ title('Phase of Coil Impedence vs Frequency')
 exportgraphics(gca, 'img/b4_Z_ph.png')
 
 
-%% plot all voltage curve fits - figure(9
+%% q5 - find L using another curve fit - figure(10)
+% curve fit abs(Z) = sqrt(R^2 + w^2*L^2)
+xdata = freqs.';
+ydata = Zampl.';
+funZ = @(B,xdata) sqrt(7.49^2 + (xdata.*2*pi).^2.*B(1).^2); % R = 7.49; % from q3
+x0 = [3.3e-3]; % initial guess = 3.3 mH (datasheet)
+B = lsqcurvefit(funZ,x0,xdata,ydata);
+L= B(1)
+
+% result: L = 0.0035
+figure(10);
+plot(freqs, Zampl.','o')
+hold on
+plot(freqs, sqrt(7.49^2 + (freqs.*2*pi).^2.*L.^2))
+ylabel('magnitude of impedence (Ohms)')
+xlabel('frequncy (Hz)')
+legend('Magnitude of Z', 'y = sqrt(R^2 + w^2*L^2)')
+title(sprintf('Magnitude of Coil Impedence vs Frequency, L from best fit = %.4fH',L))
+exportgraphics(gca, 'img/b5_L.png')
+hold off
+
+%% q4x - plot all voltage curve fits - figure(9)
 for i = 1 : length(freqs)
 
     fileMatrix = readmatrix(sprintf("data\\B3_%d.csv", freqs(i)));
