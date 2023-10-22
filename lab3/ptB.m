@@ -22,6 +22,11 @@ lvdt_v0 = -0.072; % V
 
 plot_markers = ['*', 'o', '+'];
 
+% store results
+f_avg = [];
+bl_avg = [];
+r_avg = [];
+
 %% q1 - F_vca(x_vca) vs position for different I_coil
 figure
 figure(1)
@@ -38,26 +43,20 @@ for i = 1 : length(coil_currents)
     % position
     lvdt_voltage = fileMatrix(:, 3);
     position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
-    %position = position - position(int32(N*trim)); % zero the 1st half
-    position = position - position(N); % zero the 2nd half
+    position = position - position(1); % zero
 
     % current
     vca_current = fileMatrix(:, 5);
-    vca_current = vca_current - lab_current(i); % compensate for LabView offset
+    vca_current = vca_current - abs(vca_current(1)- lab_current(i)); % compensate for LabView offset
     
     % force
     load_cell = fileMatrix(:, 2); % kg
     load_cell = load_cell - lab_load_cell; % compensate for LabView offset
-    %load_cell = load_cell - load_cell(N); % zero the 2nd half
-    %load_cell = -1 * (load_cell(int32(N*trim)) - load_cell); % zero the load cell reading
     force = load_cell * g;
-    %force = vca_bl * vca_current;
-    %plot(position(1:int32(N*trim)), force(1:int32(N*trim))); % plot 1st half to avoid hysteresis
-    plot(position(int32(N*trim):N), force(int32(N*trim):N))
 
-    %plot(position(1:length(position)/2), force(1:length(force)/2)); % remove hysteresis, keep 1st half
-    %plot(position(length(position)*0.53:length(position)), force(length(force)*0.53:length(force))); % remove hysteresis, keep 2nd half
+    plot(position(int32(N*trim):N), force(int32(N*trim):N))
     hold on;
+    f_avg(i) = mean(force(int32(N*trim):N));
 end
 
 ylabel('VCA Force (N)')
@@ -77,12 +76,10 @@ for i = 1 : length(coil_currents)
     % position
     lvdt_voltage = fileMatrix(:, 3);
     position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
-    %position = position - position(int32(N*trim)); % zero the 1st half
-    position = position - position(N); % zero the 2nd half
-
+    position = position - position(1); % zero
     % current
     vca_current = fileMatrix(:, 5);
-    vca_current = vca_current - lab_current(i); % compensate for LabView offset
+    vca_current = vca_current - abs(vca_current(1)- lab_current(i)); % compensate for LabView offset
     
     % force
     load_cell = fileMatrix(:, 2); % kg
@@ -94,6 +91,7 @@ for i = 1 : length(coil_currents)
 
     plot(position(int32(N*trim):N), exp_Bl(int32(N*trim):N)) % plot 2nd half to avoid hysteresis and ugly spike in 1st half
     hold on;
+    bl_avg(i) = mean(exp_Bl(int32(N*trim):N));
 end
 
 ylabel('VCA Force Constant Bl (N/A)')
@@ -113,11 +111,11 @@ for i = 1 : length(coil_currents)
     % position
     lvdt_voltage = fileMatrix(:, 3);
     position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
-    position = position - position(N); % zero the 2nd half
+    position = position - position(1); % zero
 
     % current
     vca_current = fileMatrix(:, 5);
-    vca_current = vca_current - lab_current(i); % compensate for LabView offset
+    vca_current = vca_current - abs(vca_current(1) - lab_current(i)); % compensate for LabView offset
     
     % force
     load_cell = fileMatrix(:, 2); % kg
@@ -126,11 +124,12 @@ for i = 1 : length(coil_currents)
 
     % voltage
     voltage = fileMatrix(:, 4); % V
-    voltage = voltage - lab_voltage(i); % compensate for LabView offset
+    voltage = voltage - abs(voltage(1) - lab_voltage(i)); % compensate for LabView offset
     resistance = voltage ./ vca_current;
 
     plot(position(int32(N*trim):N), resistance(int32(N*trim):N)) % plot 2nd half to avoid hysteresis and ugly spike in 1st half
     hold on;
+    r_avg(i) = mean(resistance(int32(N*trim):N));
 end
 
 % re-calc experimental R
@@ -147,89 +146,10 @@ exportgraphics(gca, 'img/b3_R_vs_pos.png')
 hold off;
 
 
-%% SCRATCH q2 - Bl vs position for different coil currents, find experimental Bl
-figure(2)
-
-% store all forces and currents to linear best fit later
-forces = [];
-currents = [];
-
-% for each coil current
+%% print results
+disp("Averages:")
 for i = 1 : length(coil_currents)
-    fileMatrix = readmatrix(sprintf("data\\B2_%.1fA.csv", coil_currents(i)));
-    N = length(fileMatrix(:,1));
-    
-    % position
-    lvdt_voltage = fileMatrix(:, 3);
-    position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
-    %position = position - position(int32(N*trim)); % zero the 1st half
-    position = position - position(N); % zero the 2nd half
-
-    % current
-    vca_current = fileMatrix(:, 5);
-    vca_current = vca_current - lab_current(i); % compensate for LabView offset
-    
-    % force
-    load_cell = fileMatrix(:, 2); % kg
-    %load_cell = load_cell - load_cell(N); % zero the 2nd half
-    %load_cell = -1 * (load_cell(int32(N*trim)) - load_cell); % zero the load cell reading
-    force = load_cell * g;
-    %force = vca_bl * vca_current;
-    %plot(position(1:int32(N*trim)), force(1:int32(N*trim))); % plot 1st
-    %half to avoid hysteresis
-    forces = [forces; force(int32(N*trim):N)];
-    currents = [currents; vca_current(int32(N*trim):N)];
-
-    %plot(vca_current(int32(N*trim):N), force(int32(N*trim):N)) % plot 2nd half to avoid hysteresis and ugly spike in 1st half
-    %hold on;
+    disp(sprintf("I = %.1f, Force = %.2f, Bl = %.2f, R = %.2f", coil_currents(i), f_avg(i), bl_avg(i), r_avg(i)));
 end
 
-% experimental force constant Bl
-bl = polyfit(currents, forces, 1); % linear best fit
-disp(['linear best fit is y = ' num2str(bl(1)) '*x + ' num2str(bl(2))])
-%disp([sprintf("current %.1f A",coil_currents(i)) 'is y = ' num2str(bl(1)) '*x + ' num2str(bl(2))])
-
-forces = [];
-currents = [];
-% for each coil current
-for i = 1 : length(coil_currents)
-    fileMatrix = readmatrix(sprintf("data\\B2_%.1fA.csv", coil_currents(i)));
-    N = length(fileMatrix(:,1));
-    
-    % position
-    lvdt_voltage = fileMatrix(:, 3);
-    position = (lvdt_voltage - lvdt_v0) ./ lvdt_b0;
-    %position = position - position(int32(N*trim)); % zero the 1st half
-    position = position - position(N); % zero the 2nd half
-
-    % current
-    vca_current = fileMatrix(:, 5);
-    vca_current = vca_current - lab_current(i); % compensate for LabView offset
-    
-    % force
-    load_cell = fileMatrix(:, 2); % kg
-    load_cell = load_cell - load_cell(N); % zero the 2nd half
-    force = load_cell * g;
-    force = force - bl(2); % zero the best fit line offset
-    forces = [forces; force(int32(N*trim):N)];
-    currents = [currents; vca_current(int32(N*trim):N)];
-
-    forces = [forces; force(int32(N*trim):N)];
-    currents = [currents; vca_current(int32(N*trim):N)];
-
-    plot(vca_current(int32(N*trim):N), force(int32(N*trim):N)) % plot 2nd half to avoid hysteresis and ugly spike in 1st half
-    hold on;
-end
-
-% re-calc experimental force constant Bl
-bl = polyfit(currents, forces, 1); % linear best fit
-disp(['linear best fit is y = ' num2str(bl(1)) '*x + ' num2str(bl(2))])
-plot(currents, bl(1)*currents + bl(2))
-
-ylabel('VCA Force (N)')
-xlabel('VCA Current (A)')
-legend('0.3A', '0.5A', '0.7A', sprintf("y=%.2fx+%.2f",bl(1),bl(2)))
-title('VCA Force vs position for different coil currents')
-exportgraphics(gca, 'img/b2_F_vs_I.png')
-hold off;
-
+disp(sprintf('avg Bl = %.2f, avg R = %.2f', mean(bl_avg), mean(r_avg)))
