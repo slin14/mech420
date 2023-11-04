@@ -15,7 +15,7 @@ lvdt_v0 = -0.072; % V
 
 % lab 5 readings to compensate for the LabView offsets
 lab_current = [0.0 0.3]; % A
-lab_voltage = [0.0 12.9]; % V
+lab_voltage = [24 12.9]; % V
 lab_load_cell = 0.176242033; % kg
 %lab_zero_position = 2.096543; % mm
 

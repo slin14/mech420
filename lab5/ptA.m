@@ -52,16 +52,16 @@ hold off
 %% q4 - coil resistance for different currents
 figure(3)
 
-resistance0 = coil_voltage0 ./ coil_current0;
-resistance1 = coil_voltage1 ./ coil_current1;
+resistance0 = (lab_voltage(1) - coil_voltage0) ./ coil_current0;
+resistance1 = (lab_voltage(2) - coil_voltage1) ./ (coil_current1 - lab_current(2));
 
-plot(position0, resistance0, 'LineWidth', 2)
-hold on;
-plot(position1, resistance1, 'LineWidth', 2)
+%plot(position0, resistance0, 'LineWidth', 2)
+%hold on;
+plot(position1, resistance1, 'r', 'LineWidth', 2)
 
 ylabel('Coil Resistance (Ohm)')
 xlabel('Position (mm)')
-legend('0A', '0.3A')
+%legend('0A', '0.3A')
 title('Coil Resistance vs Position for different coil currents')
 exportgraphics(gca, 'img/a3_R_vs_I.png')
 hold off
