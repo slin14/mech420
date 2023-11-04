@@ -23,7 +23,7 @@ trimHead0 = 80000; % trim initial data points
 trimHead1 = 72000; % trim initial data points
 trimTail1 = 80000; % trim final data points
 
-%% read 0.0A data
+%% read 0.0A position and force
 fileMatrix0 = readmatrix("data\\partA\\aa_0.0A.xlsx");
 N0 = length(fileMatrix0(:,1));
 
@@ -40,7 +40,7 @@ load_cell0 = load_cell0 - lab_load_cell; % compensate for LabView offset
 force0 = load_cell0 * g;
 force0 = force0(trimHead0:N0); % trim
 
-%% read 0.3A data
+%% read 0.3A position and force
 fileMatrix1 = readmatrix("data\\partA\\aa_0.3A.xlsx");
 N1 = length(fileMatrix1(:,1));
 
@@ -56,3 +56,23 @@ load_cell1 = fileMatrix1(:, 2); % kg
 load_cell1 = load_cell1 - lab_load_cell; % compensate for LabView offset
 force1 = load_cell1 * g;
 force1 = force1(trimHead1:N1-trimTail1); % trim
+
+%% read coil current and voltage
+% coil_current
+coil_current0 = fileMatrix0(:, 5); % A
+coil_current0 = coil_current0(trimHead0:N0); % trim
+
+% coi_voltage
+coil_voltage0 = fileMatrix0(:, 4); % V
+coil_voltage0 = coil_voltage0(trimHead0:N0); % trim
+
+%% read 0.3A coil current and voltage
+% coil_current
+coil_current1 = fileMatrix1(:, 5); % A
+coil_current1 = coil_current1(trimHead1:N1-trimTail1); % trim
+coil_current1 = coil_current1 - lab_current(2); % zero
+
+% coi_voltage
+coil_voltage1 = fileMatrix1(:, 4); % V
+coil_voltage1 = coil_voltage1(trimHead1:N1-trimTail1); % trim
+coil_voltage1 = coil_voltage1 - lab_voltage(2); % compensate for LabView offset
