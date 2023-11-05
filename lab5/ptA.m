@@ -1,4 +1,4 @@
-% 423 Lab 5
+% 423 Lab 5 - Part A
 % load parameters and data
 % -> run setup_ptA.m
 

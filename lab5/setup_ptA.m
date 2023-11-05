@@ -1,4 +1,4 @@
-% 423 Lab 5
+% 423 Lab 5 - Part A
 % Setup & Define Parameters
 clear all; clc; clear; close all;
 
