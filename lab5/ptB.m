@@ -35,14 +35,44 @@ legend('1mm', '30mm', 'Location','southeast')
 title('Complex Part of Coil Impedence vs Frequency for both positions')
 exportgraphics(gca, 'img/b1_Z_mag.png')
 
-%%
-figure(7);
-plot(ptBfrequecies, Zampl_1.','o')
+
+
+%% q2 - find L using complex part curve fit up to 100 Ohm
+% curve fit imag(Z) = wL
+ptA_R = 45; % Ohm
+trimFreqIndex = 6;
+
+ptBfrequecies_trim = ptBfrequecies(1:trimFreqIndex);
+Z_1_trim = Z_1(1:trimFreqIndex);
+Z_2_trim = Z_2(1:trimFreqIndex);
+
+figure(9);
+plot(ptBfrequecies_trim, imag(Z_1_trim).','o')
 hold on;
-plot(ptBfrequecies, Zampl_2.','o')
-ylabel('impedence magnitude (Ohms)')
-xlabel('frequency (Hz)')
-legend('1mm', '30mm', 'Location','southeast')
-title('Magnetude of Coil Impedence vs Frequency')
-exportgraphics(gca, 'img/b2_Z_mag.png')
+plot(ptBfrequecies_trim, imag(Z_2_trim).','o')
+
+% curve fit 1
+xdata = ptBfrequecies_trim.';
+ydata = imag(Z_1_trim).';
+funZ = @(B,xdata) xdata.*2*pi.*B(1);
+x0 = [100]; % initial guess
+B = lsqcurvefit(funZ,x0,xdata,ydata);
+L_1_trim = B(1);
+plot(ptBfrequecies_trim, ptBfrequecies_trim.*2*pi.*L_1_trim)
+
+% curve fit 2
+xdata = ptBfrequecies_trim.';
+ydata = imag(Z_2_trim).';
+funZ = @(B,xdata) xdata.*2*pi.*B(1);
+x0 = [100]; % initial guess
+B = lsqcurvefit(funZ,x0,xdata,ydata);
+L_2_trim = B(1);
+plot(ptBfrequecies_trim, ptBfrequecies_trim.*2*pi.*L_2_trim)
+
+ylabel('complex part of impedence (Ohms)')
+xlabel('frequncy (Hz)')
+legend('1mm', '30mm', sprintf('1mm curve fit, L=%.2fH',L_1_trim), sprintf('30mm curve fit, L=%.2fH',L_2_trim), 'Location','southeastoutside')
+title('Complex Part of Coil Impedence vs Frequency Curve Fit up to 100 Ohm')
+exportgraphics(gca, 'img/b2_L_curve_fit_trim.png')
+hold off
 
