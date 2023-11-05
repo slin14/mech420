@@ -3,7 +3,7 @@
 % -> run setup_ptB.m
 
 %% q1 - complex impedance bode plots
-% 11 mm
+% 1 mm
 V_1 = Vampl_1(:,1).*complex(cos(Vphase_1(:,1)),sin(Vphase_1(:,1)));
 I_1 = Iampl_1(:,1).*complex(cos(Iphase_1(:,1)),sin(Iphase_1(:,1)));
 
@@ -29,20 +29,20 @@ figure(6);
 plot(ptBfrequecies, imag(Z_1).','o')
 hold on;
 plot(ptBfrequecies, imag(Z_2).','o')
-%plot(ptBfrequecies, Zampl.')
 ylabel('complex part of impedence (Ohms)')
 xlabel('frequncy (Hz)')
-legend('11mm', '30mm')
+legend('1mm', '30mm', 'Location','southeast')
 title('Complex Part of Coil Impedence vs Frequency for both positions')
 exportgraphics(gca, 'img/b1_Z_mag.png')
 
 %%
 figure(7);
-plot(ptBfrequecies, 2*pi/180*Zphase.','+')
-%plot(ptBfrequecies, 2*pi/180*Zphase.')
-ylabel('impedence phase (deg)')
-xlabel('frequncy (Hz)')
-%legend('VCA Coil Current', sprintf('y = %.2fsin(%.2fx%.2f)+%.2f',A(2),A(2),A(3),A(4)))
-title('Phase of Coil Impedence vs Frequency')
-exportgraphics(gca, 'img/b4_Z_ph.png')
+plot(ptBfrequecies, Zampl_1.','o')
+hold on;
+plot(ptBfrequecies, Zampl_2.','o')
+ylabel('impedence magnitude (Ohms)')
+xlabel('frequency (Hz)')
+legend('1mm', '30mm', 'Location','southeast')
+title('Magnetude of Coil Impedence vs Frequency')
+exportgraphics(gca, 'img/b2_Z_mag.png')
 

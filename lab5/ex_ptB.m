@@ -11,13 +11,13 @@ Iphase = ones(length(ptBfrequecies));
 
 for i = 1 : length(ptBfrequecies)
 
-    fileMatrix = readmatrix(sprintf("data\\partB\\partB11mm%d.xlsx", ptBfrequecies(i)));
+    fileMatrix = readmatrix(sprintf("dat\\lab4partb1mm%dhz.xlsx", ptBfrequecies(i)));
     time   = fileMatrix(:, 1); % s
     coil_v = fileMatrix(:, 4); % V
     coil_i = fileMatrix(:, 5); % A
     
     % trim data to 1 period so computation doesn't take forever
-    N = ptBsampleFreqs(i)/ptBfrequecies(i);
+    N = ptBsampleFreq/ptBfrequecies(i);
     time   = time(1:N);
     coil_v = coil_v(1:N);
     coil_i = coil_i(1:N);
@@ -39,7 +39,7 @@ for i = 1 : length(ptBfrequecies)
     Iampl(i)  = A(1);
     Iphase(i) = A(3);
     
-    fig = figure(8); subplot(4,4,i);
+    fig = figure(8); subplot(3,6,i);
     plot(time, coil_i)
     hold on;
     plot(time,  A(1).*sin(A(2).*time + A(3)) + A(4), 'r') % curve fit
@@ -51,5 +51,5 @@ han.YLabel.Visible='on';
 ylabel(han,'Current (A)');
 xlabel(han, 'time (s)');
 sgtitle('Curve Fits of VCA Current vs Time for all frequencies')
-exportgraphics(gca, 'img/b_i_curve_fits.png')
+exportgraphics(gca, 'img/b_ex_i_curve_fits.png')
 hold off;
